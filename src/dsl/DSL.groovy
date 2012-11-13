@@ -1,6 +1,7 @@
 package dsl
 
 import utn.frba.tadp.firewall.impl.Firewall
+import utn.frba.tadp.firewall.impl.model.Regla
 
 class DSL {
     
@@ -12,6 +13,10 @@ class DSL {
             filtrar = { word -> new FilterBuilder(delegate, word) }
 			bloquear = { word -> new BlockIPBuilder(delegate)}
         }
+		
+		Regla.metaClass {
+			si = { word -> new ActionBuilder(delegate, word) }
+		}
     }
 
 }
