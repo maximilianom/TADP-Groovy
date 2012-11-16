@@ -1,19 +1,19 @@
 package dsl;
 
+import static dsl.ActionBuilder.*
 import static dsl.BlockIPBuilder.*
 import static dsl.DSL.*
 import static dsl.FilterBuilder.*
-import static dsl.ActionBuilder.*
 import static org.junit.Assert.*
 import junit.framework.Assert
 
 import org.junit.Before
 import org.junit.Test
 
-import utn.frba.tadp.firewall.api.Filter
 import utn.frba.tadp.firewall.impl.Firewall
 import utn.frba.tadp.firewall.impl.model.Regla
 import utn.frba.tadp.firewall.impl.model.Request
+import utn.frba.tadp.firewall.mock.RequestListenerMock;
 
 class DSLTest {
 
@@ -41,13 +41,20 @@ class DSLTest {
         Regla regla = firewall.filtrar todos los puertos a excepcion de {[80, 443, 8080]}
 		
 		firewall.filtrar todos los puertos a excepcion de {[80, 443, 8080]}
-			si falla entonces loguea
-			si acepta entonces bleh
+			si falla entonces informa
+			
+		RequestListenerMock listenerMock = new RequestListenerMock()
+		firewall.setDefaultRequestListener(listenerMock)
         
         Assert.assertTrue (regla.getFilter().accepts(new Request(1, "", "")));
         Assert.assertFalse(regla.getFilter().accepts(new Request(80, "", "")));
         Assert.assertFalse(regla.getFilter().accepts(new Request(443, "", "")));
         Assert.assertFalse(regla.getFilter().accepts(new Request(8080, "", "")));
+		
+		Request r = new Request(1, "", "")
+		firewall.evaluate(r);
+		
+		Assert.assertTrue(listenerMock.wasBlocked(r));
     }
 	
 	@Test

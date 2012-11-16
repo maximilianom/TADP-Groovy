@@ -1,5 +1,6 @@
 package dsl
 
+import utn.frba.tadp.firewall.impl.actions.InformarBloqueoAction
 import utn.frba.tadp.firewall.impl.actions.LoggearPaqueteAction
 import utn.frba.tadp.firewall.impl.model.Regla
 
@@ -8,6 +9,7 @@ class ActionBuilder {
 	def static acepta = "acepta"
 	
 	def static logea = new LoggearPaqueteAction()
+	def static informa = new InformarBloqueoAction()
 	
 	def Regla regla
 	
