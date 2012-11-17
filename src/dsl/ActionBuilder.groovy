@@ -15,10 +15,13 @@ class ActionBuilder {
 	
 	def builder
 	
-	ActionBuilder(regla, word) {
+	ActionBuilder(regla) {
 		this.regla = regla
+	}
+	
+	def si(word){
 		if(word.equals(falla)) {
-			 builder = new BlockingActionBuilder(regla)
+			builder = new BlockingActionBuilder(regla)
 		} else {
 			builder = new PublicActionBuilder(regla)
 		}

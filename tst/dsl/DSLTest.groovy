@@ -13,7 +13,7 @@ import org.junit.Test
 import utn.frba.tadp.firewall.impl.Firewall
 import utn.frba.tadp.firewall.impl.model.Regla
 import utn.frba.tadp.firewall.impl.model.Request
-import utn.frba.tadp.firewall.mock.RequestListenerMock;
+import utn.frba.tadp.firewall.mock.*;
 
 class DSLTest {
 
@@ -25,8 +25,8 @@ class DSLTest {
     }
 	
 	@Test
-	public void 'Bloquear envios desde 192.168.1.1 a 192.168.1.2 por el puerto 80'(){
-		Regla regla = firewall.bloquear envios desde "192.168.1.1" a "192.168.1.2"
+	public void 'Bloquear envios desde 192.168.1.1 a 192.168.1.2'(){
+		Regla regla = firewall.bloquear envios desde "192.168.1.1" a "192.168.1.2" si falla entonces logea
 		
 		List<Regla> reglas = firewall.getRules();
 		Assert.assertEquals(regla, reglas.get(0));
@@ -37,11 +37,9 @@ class DSLTest {
 	}
     
     @Test
-    public void 'Filtrar todos los puertos salvo el 80, 443 y 8080'() {
-        Regla regla = firewall.filtrar todos los puertos a excepcion de {[80, 443, 8080]}
-		
-		firewall.filtrar todos los puertos a excepcion de {[80, 443, 8080]}
-			si falla entonces informa
+    public void 'Bloquear los puertos 80, 443 y 8080'() {
+        Regla regla = firewall.bloquear los puertos {[80, 443, 8080]} si falla entonces informa	
+					
 			
 		RequestListenerMock listenerMock = new RequestListenerMock()
 		firewall.setDefaultRequestListener(listenerMock)
@@ -51,15 +49,9 @@ class DSLTest {
         Assert.assertFalse(regla.getFilter().accepts(new Request(443, "", "")));
         Assert.assertFalse(regla.getFilter().accepts(new Request(8080, "", "")));
 		
-		Request r = new Request(1, "", "")
+		Request r = new Request(80, "127.0.0.1", "192.168.1.1")
 		firewall.evaluate(r);
 		
 		Assert.assertTrue(listenerMock.wasBlocked(r));
     }
-	
-	@Test
-	public void 'Logear mensajes bloqueados'() {
-		Regla regla = firewall.filtrar todos los puertos a excepcion de {[80]}
-		regla.si falla entonces logea
-	}
 }

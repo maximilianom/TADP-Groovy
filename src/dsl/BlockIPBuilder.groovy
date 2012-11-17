@@ -25,6 +25,7 @@ class BlockIPBuilder {
 		FiltroIpIndividual filtro = new FiltroIpIndividual(this.ipOrigen, ip)
 		Regla r = new Regla(new ArrayList<Action>(), new ArrayList<Action>(), filtro)
 		this.firewall.addRule(r)
-		r
+		
+		return new ActionBuilder(r)
 	}
 }
